@@ -66,6 +66,11 @@ helixer_user@03356047d15f:~/shared/out$ helixer_post_bin Arabidopsis_lyrata.h5 p
 
 Notes on running via Singularity 
 ---
+
+### Installing Singularity ###
+
+( If you already have singularity available, skip to section "Running via Singularity" below.)
+
 For singularity install, see also: 
 https://github.com/sylabs/singularity/blob/master/INSTALL.md
 
@@ -81,6 +86,7 @@ echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
 source ~/.bashrc
 ```
 
+Clone syslabs' singularity repo and install: 
 ```
 mkdir  -p github.com/syslabs/
 cd github.com/syslabs
@@ -93,11 +99,15 @@ make -C builddir
 sudo make -C builddir install
 
 ```
+
+If all went well, you should be able to see a version number:
 ```
 singularity --version
 # -->  singularity-ce version 3.9.9
 
 ```
+
+### Running via Singularity ###
 
 ```
 # pull current docker image (properly versioned images shall be uploaded at some point in the near future 🤞 )
