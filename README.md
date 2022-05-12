@@ -62,3 +62,50 @@ helixer_user@03356047d15f:~/shared/out$ helixer_post_bin Arabidopsis_lyrata.h5 p
 # --> Total: 12727167bp across 2300 windows
 
 ```
+-----------------------------------
+
+Notes on running via Singularity 
+---
+For singularity install, see also: 
+https://github.com/sylabs/singularity/blob/master/INSTALL.md
+
+Install go:
+```
+export VERSION=1.18.1 OS=linux ARCH=amd64  # change this as you need
+
+wget -O /tmp/go${VERSION}.${OS}-${ARCH}.tar.gz \
+  https://dl.google.com/go/go${VERSION}.${OS}-${ARCH}.tar.gz
+sudo tar -C /usr/local -xzf /tmp/go${VERSION}.${OS}-${ARCH}.tar.gz
+
+echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
+source ~/.bashrc
+```
+
+```
+mkdir  -p github.com/syslabs/
+cd github.com/syslabs
+git clone --recurse-submodules https://github.com/sylabs/singularity.git
+cd singularity/
+git checkout --recurse-submodules v3.9.9
+
+./mconfig
+make -C builddir
+sudo make -C builddir install
+
+```
+```
+singularity --version
+# -->  singularity-ce version 3.9.9
+
+```
+
+```
+# pull current docker image (properly versioned images shall be uploaded at some point in the near future 🤞 )
+singularity pull  docker://gglyptodon/helixer-docker:helixer_tf11.2_cudnn8
+
+# in this example, the directory "helixer_test" already contains downloaded data, models/land_plant.h5 is present etc 
+singularity run helixer-docker_helixer_tf11.2_cudnn8.sif fasta2h5.py --species Arabidopsis_lyrata --h5-output-path Arabidopsis_lyrata.h5 --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa
+# notice '--nv' for GPU support
+singularity run --nv helixer-docker_helixer_tf11.2_cudnn8.sif /home/helixer_user/Helixer/helixer/prediction/HybridModel.py --load-model-path models/land_plant.h5 --test-data Arabidopsis_lyrata.h5 --overlap --val-test-batch-size 32 -v
+singularity run helixer-docker_helixer_tf11.2_cudnn8.sif helixer_post_bin Arabidopsis_lyrata.h5 predictions.h5 100 0.1 0.8 60 Arabidopsis_lyrata_chromosome8_helixer.gff3
+```
