@@ -25,11 +25,11 @@ wget https://raw.githubusercontent.com/gglyptodon/helixer-docker/tmp_helixer_v0.
 mkdir -p data/out
 chmod o+w data/out # something the container can write to
 
-docker build -t helixer_v0.2.0_tf9_2_cudnn7_testing --rm .
+docker build -t helixer_v0.2.0_10.0-cudnn7-runtime-ubuntu18.04_testing --rm .
 ```
 
 
 - Run:
 ```
-docker run --runtime=nvidia -it helixer_v0.2.0_tf9_2_cudnn7_testing
+docker run --runtime=nvidia -it helixer_v0.2.0_10.0-cudnn7-runtime-ubuntu18.04_testing
 ```
