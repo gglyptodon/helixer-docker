@@ -25,13 +25,13 @@ wget https://raw.githubusercontent.com/gglyptodon/helixer-docker/main/Dockerfile
 mkdir -p data/out
 chmod o+w data/out # something the container can write to
 
-docker build -t helixer_testing_tf11_2_cudnn8 --rm .
+docker build -t helixer_testing --rm .
 ```
 
 
 - Run:
 ```
-docker run --runtime=nvidia -it --name helixer_testing --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared helixer_testing_tf11_2_cudnn8:latest
+docker run --runtime=nvidia -it --name helixer_testing --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared helixer_testing:latest
 ```
 
 
@@ -110,12 +110,12 @@ singularity --version
 ### Running via Singularity ###
 
 ```
-# pull current docker image (properly versioned images shall be uploaded at some point in the near future 🤞 )
-singularity pull  docker://gglyptodon/helixer-docker:helixer_tf11.2_cudnn8
+# pull current docker image 
+singularity pull  docker://gglyptodon/helixer-docker:helixer_v0.3.0a0_cuda_11.2.0-cudnn8
 
 # in this example, the directory "helixer_test" already contains downloaded data, models/land_plant.h5 is present etc 
-singularity run helixer-docker_helixer_tf11.2_cudnn8.sif fasta2h5.py --species Arabidopsis_lyrata --h5-output-path Arabidopsis_lyrata.h5 --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa
+singularity run helixer-docker_helixer_v0.3.0a0_cuda_11.2.0-cudnn8.sif fasta2h5.py --species Arabidopsis_lyrata --h5-output-path Arabidopsis_lyrata.h5 --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa
 # notice '--nv' for GPU support
-singularity run --nv helixer-docker_helixer_tf11.2_cudnn8.sif /home/helixer_user/Helixer/helixer/prediction/HybridModel.py --load-model-path models/land_plant.h5 --test-data Arabidopsis_lyrata.h5 --overlap --val-test-batch-size 32 -v
-singularity run helixer-docker_helixer_tf11.2_cudnn8.sif helixer_post_bin Arabidopsis_lyrata.h5 predictions.h5 100 0.1 0.8 60 Arabidopsis_lyrata_chromosome8_helixer.gff3
+singularity run --nv helixer-docker_helixer_v0.3.0a0_cuda_11.2.0-cudnn8.sif /home/helixer_user/Helixer/helixer/prediction/HybridModel.py --load-model-path models/land_plant.h5 --test-data Arabidopsis_lyrata.h5 --overlap --val-test-batch-size 32 -v
+singularity run helixer-docker_helixer_v0.3.0a0_cuda_11.2.0-cudnn8.sif helixer_post_bin Arabidopsis_lyrata.h5 predictions.h5 100 0.1 0.8 60 Arabidopsis_lyrata_chromosome8_helixer.gff3
 ```

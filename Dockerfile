@@ -28,20 +28,18 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # --- Helixer and HelixerPost --- #
 
 WORKDIR /home/helixer_user/
-RUN git clone https://github.com/weberlab-hhu/Helixer.git
+RUN git clone -b v0.3.0a0 https://github.com/weberlab-hhu/Helixer.git Helixer
 RUN pip install --no-cache-dir -r /home/helixer_user/Helixer/requirements.txt
 RUN cd Helixer && pip install --no-cache-dir .
 
 WORKDIR /home/helixer_user/
 RUN git clone https://github.com/TonyBolger/HelixerPost.git
+RUN cd HelixerPost && git checkout d180ad8b353fa8da69342bdb924ecfaeea9464af
 RUN mkdir bin
 ENV PATH="/home/helixer_user/bin:${PATH}"
 RUN cd HelixerPost/helixer_post_bin && cargo build --release
 RUN mv /home/helixer_user/HelixerPost/target/release/helixer_post_bin /home/helixer_user/bin/
 RUN rm -r /home/helixer_user/HelixerPost/target/release/
-
-# --- remove rust again --- #
-RUN yes | rustup self uninstall
 
 USER helixer_user
 CMD ["bash"]
