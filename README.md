@@ -1,5 +1,15 @@
 # helixer-docker
 
+This repository accompanies https://github.com/weberlab-hhu/Helixer .
+
+The aim is to provide a mostly hassle-free way to use Helixer via docker (or singularity).
+
+For more information on how to run Helixer, please refer to its [documentation](https://github.com/weberlab-hhu/Helixer).
+
+--------
+
+### Instructions for docker (for use with Nvidia GPUs) ###
+
 - Prerequisites (on host):
   - Nvidia GPU with CUDA capabilities >=3.5; installed driver version >= 450.80.02 
 
