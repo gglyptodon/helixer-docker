@@ -33,8 +33,10 @@ docker run -it gglyptodon/helixer-docker:helixer_v0.3.0a0_cuda_11.2.0-cudnn8
 ```
 ```
 # optionally, set up a shared directory and mount it, e.g.:
+# on host:
 mkdir -p data/out
 chmod o+w data/out # something the container can write to
+# mount directory and run interactively:
 docker run --runtime=nvidia -it --name helixer_testing_v0.3.0a0_cuda_11.2.0-cudnn8 --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared gglyptodon/helixer-docker:helixer_v0.3.0a0_cuda_11.2.0-cudnn8
 ```
 
