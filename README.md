@@ -25,14 +25,26 @@ sudo pkill -SIGHUP dockerd
 ```
 Or follow instruction from https://github.com/NVIDIA/nvidia-docker
 
+### Pull prepared image ###
+```
+docker pull gglyptodon/helixer-docker:helixer_v0.3.0a0_cuda_11.2.0-cudnn8
+# run container interactively 
+docker run -it gglyptodon/helixer-docker:helixer_v0.3.0a0_cuda_11.2.0-cudnn8
+```
+```
+# optionally, set up a shared directory and mount it, e.g.:
+mkdir -p data/out
+chmod o+w data/out # something the container can write to
+docker run --runtime=nvidia -it --name helixer_testing_v0.3.0a0_cuda_11.2.0-cudnn8 --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared gglyptodon/helixer-docker:helixer_v0.3.0a0_cuda_11.2.0-cudnn8
+```
 
-
+### Alternatively, build it yourself ###
 - Build:
 ```
 mkdir SOME_DIR
 cd SOME_DIR
 wget https://raw.githubusercontent.com/gglyptodon/helixer-docker/main/Dockerfile
-mkdir -p data/out
+
 chmod o+w data/out # something the container can write to
 
 docker build -t helixer_testing --rm .
