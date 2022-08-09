@@ -15,7 +15,7 @@ For more information on how to run Helixer, please refer to its [documentation](
   
 > Note that the code _will_ run on the CPU if an Nvidia GPU or appropriate drivers are not available.
 > However, the walltime requirements will increase _substantially_. If not running on the GPU
-> exclude the parameter `--runtime=nvidia` when running `docker run`, or the parameter `-nv` when
+> exclude the parameter `--runtime=nvidia` when running `docker run`, or the parameter `--nv` when
 > running `singularity run`, respectively.
 
 - Prepare, install nvidia docker runtime (on host), e.g. for ubuntu:
@@ -69,27 +69,25 @@ docker run --runtime=nvidia -it --name helixer_testing --rm --mount type=bind,so
 ```
 helixer_user@03356047d15f:~$ cd shared/out/
 
-helixer_user@03356047d15f:~/shared/out$ mkdir models
-curl https://uni-duesseldorf.sciebo.de/s/4NqBSieS9Tue3J3/download --output models/land_plant.h5
-
+# get some test data
 helixer_user@03356047d15f:~/shared/out$ curl -L ftp://ftp.ensemblgenomes.org/pub/plants/release-47/fasta/arabidopsis_lyrata/dna/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --output Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz
 
-helixer_user@03356047d15f:~/shared/out$ gunzip Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz
+# predict gene models
+helixer_user@03356047d15f:~/shared/out$ Helixer.py --fasta-path Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
 
-helixer_user@03356047d15f:~/shared/out$ fasta2h5.py --species Arabidopsis_lyrata --h5-output-path Arabidopsis_lyrata.h5 --fasta-path Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa
-# ->  Numerification of 0-22951293 of the sequence of 8 took 3.50 secs
-# 1 Numerified Fasta only Coordinate (seqid: 8, len: 22951293)
-# in 8.59 secs [...]
+# see start and end of expected output below:
 
-helixer_user@03356047d15f:~/shared/out$ ~/Helixer/helixer/prediction/HybridModel.py --load-model-path models/land_plant.h5 --test-data Arabidopsis_lyrata.h5 --overlap --val-test-batch-size 32 -v
-# -->
-# Total params: 2,105,672
-# Trainable params: 2,105,096
-# Non-trainable params: 576
+# No config file found
+
+# Helixer.py config: 
+# {'batch_size': 32,
+# 'compression': 'gzip',
+
 # [...]
 
-helixer_user@03356047d15f:~/shared/out$ helixer_post_bin Arabidopsis_lyrata.h5 predictions.h5 100 0.1 0.8 60 Arabidopsis_lyrata_chromosome8_helixer.gff3
-# --> Total: 12727167bp across 2300 windows
+# Total: 12727167bp across 2300 windows
+
+# Helixer successfully finished the annotation of Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz in 0.06 hours. GFF file written to Arabidopsis_lyrata_chromosome8_helixer.gff3.
 
 ```
 -----------------------------------
@@ -143,9 +141,7 @@ singularity --version
 # pull current docker image 
 singularity pull  docker://gglyptodon/helixer-docker:helixer_v0.3.0a0_cuda_11.2.0-cudnn8
 
-# in this example, the directory "helixer_test" already contains downloaded data, models/land_plant.h5 is present etc 
-singularity run helixer-docker_helixer_v0.3.0a0_cuda_11.2.0-cudnn8.sif fasta2h5.py --species Arabidopsis_lyrata --h5-output-path Arabidopsis_lyrata.h5 --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa
+# in this example, the directory "helixer_test" already contains downloaded data
+singularity run --nv helixer-docker_helixer_v0.3.0a0_cuda_11.2.0-cudnn8.sif Helixer.py --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
 # notice '--nv' for GPU support
-singularity run --nv helixer-docker_helixer_v0.3.0a0_cuda_11.2.0-cudnn8.sif /home/helixer_user/Helixer/helixer/prediction/HybridModel.py --load-model-path models/land_plant.h5 --test-data Arabidopsis_lyrata.h5 --overlap --val-test-batch-size 32 -v
-singularity run helixer-docker_helixer_v0.3.0a0_cuda_11.2.0-cudnn8.sif helixer_post_bin Arabidopsis_lyrata.h5 predictions.h5 100 0.1 0.8 60 Arabidopsis_lyrata_chromosome8_helixer.gff3
 ```
