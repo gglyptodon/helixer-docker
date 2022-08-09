@@ -12,6 +12,11 @@ For more information on how to run Helixer, please refer to its [documentation](
 
 - Prerequisites (on host):
   - Nvidia GPU with CUDA capabilities >=3.5; installed driver version >= 450.80.02 
+  
+> Note that the code _will_ run on the CPU if an Nvidia GPU or appropriate drivers are not available.
+> However, the walltime requirements will increase _substantially_. If not running on the GPU
+> exclude the parameter `--runtime=nvidia` when running `docker run`, or the parameter `-nv` when
+> running `singularity run`, respectively.
 
 - Prepare, install nvidia docker runtime (on host), e.g. for ubuntu:
 ```
@@ -29,10 +34,10 @@ Or follow instruction from https://github.com/NVIDIA/nvidia-docker
 ```
 docker pull gglyptodon/helixer-docker:helixer_v0.3.0a0_cuda_11.2.0-cudnn8
 # run container interactively 
-docker run -it gglyptodon/helixer-docker:helixer_v0.3.0a0_cuda_11.2.0-cudnn8
+docker run --runtime=nvidia -it gglyptodon/helixer-docker:helixer_v0.3.0a0_cuda_11.2.0-cudnn8
 ```
 ```
-# optionally, set up a shared directory and mount it, e.g.:
+# additionally, set up a shared directory and mount it, e.g.:
 # on host:
 mkdir -p data/out
 chmod o+w data/out # something the container can write to
@@ -47,6 +52,7 @@ mkdir SOME_DIR
 cd SOME_DIR
 wget https://raw.githubusercontent.com/gglyptodon/helixer-docker/main/Dockerfile
 
+mkdir -p data/out
 chmod o+w data/out # something the container can write to
 
 docker build -t helixer_testing --rm .
