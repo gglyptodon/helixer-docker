@@ -141,7 +141,7 @@ singularity --version
 
 ```
 # pull current docker image 
-singularity pull  docker://gglyptodon/helixer-docker:helixer_v0.3.0a0_cuda_11.2.0-cudnn8
+singularity pull  docker://gglyptodon/helixer-docker:helixer_v0.3.0_cuda_11.2.0-cudnn8
 
 # in this example, the directory "helixer_test" already contains downloaded data
 singularity run --nv helixer-docker_helixer_v0.3.0_cuda_11.2.0-cudnn8.sif Helixer.py --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
