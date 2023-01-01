@@ -65,7 +65,7 @@ docker run --runtime=nvidia -it --name helixer_v0.3.0 --rm --mount type=bind,sou
 ```
 
 
-- Try out:
+### Try out:
 ```
 # Download models (models will be saved to ~/.local/share/Helixer/models/ )
 helixer_user@03356047d15f:~$ Helixer/scripts/fetch_helixer_models.py
