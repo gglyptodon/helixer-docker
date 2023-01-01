@@ -7,6 +7,8 @@ RUN apt-get install python3-venv -y
 RUN apt-get install git -y
 RUN apt-get install libhdf5-dev -y
 RUN apt-get install curl -y
+RUN apt-get install libbz2-dev -y
+RUN apt-get install liblzma-dev -y
 RUN apt-get autoremove -y
 
 # --- prep for hdf5 for HelixerPost --- #
@@ -28,13 +30,13 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # --- Helixer and HelixerPost --- #
 
 WORKDIR /home/helixer_user/
-RUN git clone -b v0.3.0a0 https://github.com/weberlab-hhu/Helixer.git Helixer
+RUN git clone -b v0.3.0 https://github.com/weberlab-hhu/Helixer.git Helixer
 RUN pip install --no-cache-dir -r /home/helixer_user/Helixer/requirements.txt
 RUN cd Helixer && pip install --no-cache-dir .
 
 WORKDIR /home/helixer_user/
 RUN git clone https://github.com/TonyBolger/HelixerPost.git
-RUN cd HelixerPost && git checkout d180ad8b353fa8da69342bdb924ecfaeea9464af
+RUN cd HelixerPost && git checkout f7cb814649150f01a17be2ee99fd57b027afd82d
 RUN mkdir bin
 ENV PATH="/home/helixer_user/bin:${PATH}"
 RUN cd HelixerPost/helixer_post_bin && cargo build --release
