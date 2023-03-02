@@ -15,7 +15,6 @@ RUN apt-get autoremove -y
 WORKDIR /tmp/
 RUN curl -L https://github.com/h5py/h5py/releases/download/3.2.1/h5py-3.2.1.tar.gz --output h5py-3.2.1.tar.gz
 RUN tar -xzvf h5py-3.2.1.tar.gz
-#RUN gcc -O2 -fPIC -shared -Ilzf -I/usr/include/hdf5/serial/ lzf/*.c lzf_filter.c -lhdf5 -L/lib/x86_64-linux-gnu/hdf5/serial -o liblzf_filter.so
 RUN cd h5py-3.2.1/lzf/ && gcc -O2 -fPIC -shared -Ilzf -I/usr/include/hdf5/serial/ lzf/*.c lzf_filter.c  -lhdf5_cpp -L/lib/x86_64-linux-gnu/hdf5/serial -o liblzf_filter.so
 RUN mkdir /usr/lib/x86_64-linux-gnu/hdf5/plugins && mv h5py-3.2.1/lzf/liblzf_filter.so /usr/lib/x86_64-linux-gnu/hdf5/plugins
 RUN rm -r /tmp/h5py*
@@ -30,13 +29,13 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # --- Helixer and HelixerPost --- #
 
 WORKDIR /home/helixer_user/
-RUN git clone -b v0.3.0 https://github.com/weberlab-hhu/Helixer.git Helixer
+RUN git clone -b v0.3.1 https://github.com/weberlab-hhu/Helixer.git Helixer
 RUN pip install --no-cache-dir -r /home/helixer_user/Helixer/requirements.txt
 RUN cd Helixer && pip install --no-cache-dir .
 
 WORKDIR /home/helixer_user/
 RUN git clone https://github.com/TonyBolger/HelixerPost.git
-RUN cd HelixerPost && git checkout f7cb814649150f01a17be2ee99fd57b027afd82d
+RUN cd HelixerPost && git checkout 4d4799bac4c05e574ae628040c5cb58eb4aa18fe
 RUN mkdir bin
 ENV PATH="/home/helixer_user/bin:${PATH}"
 RUN cd HelixerPost/helixer_post_bin && cargo build --release
