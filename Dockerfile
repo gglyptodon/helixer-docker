@@ -1,15 +1,15 @@
-FROM nvidia/cuda:11.2.0-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
 RUN useradd --create-home --shell /bin/bash helixer_user
 RUN apt-get update -y
-RUN apt-get install python3-dev -y
-RUN apt-get install python3-pip -y
-RUN apt-get install python3-venv -y
-RUN apt-get install git -y
-RUN apt-get install libhdf5-dev -y
-RUN apt-get install curl -y
-RUN apt-get install libbz2-dev -y
-RUN apt-get install liblzma-dev -y
-RUN apt-get autoremove -y
+RUN apt-get install -y python3-dev \
+  python3-pip \
+  python3-venv \
+  git \
+  libhdf5-dev \
+  curl \
+  libbz2-dev \
+  liblzma-dev
+RUN apt autoremove -y
 
 # --- prep for hdf5 for HelixerPost --- #
 WORKDIR /tmp/
@@ -29,7 +29,7 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # --- Helixer and HelixerPost --- #
 
 WORKDIR /home/helixer_user/
-RUN git clone -b v0.3.1 https://github.com/weberlab-hhu/Helixer.git Helixer
+RUN git clone -b v0.3.2 https://github.com/weberlab-hhu/Helixer.git Helixer
 RUN pip install --no-cache-dir -r /home/helixer_user/Helixer/requirements.txt
 RUN cd Helixer && pip install --no-cache-dir .
 
@@ -41,6 +41,9 @@ ENV PATH="/home/helixer_user/bin:${PATH}"
 RUN cd HelixerPost/helixer_post_bin && cargo build --release
 RUN mv /home/helixer_user/HelixerPost/target/release/helixer_post_bin /home/helixer_user/bin/
 RUN rm -r /home/helixer_user/HelixerPost/target/release/
+
+RUN chown -R helixer_user:helixer_user Helixer && \
+    chown -R helixer_user:helixer_user HelixerPost
 
 USER helixer_user
 CMD ["bash"]
