@@ -32,9 +32,9 @@ Or follow instruction from https://github.com/NVIDIA/nvidia-docker
 
 ### Pull prepared image ###
 ```
-docker pull gglyptodon/helixer-docker:helixer_v0.3.2_cuda_11.8.0-cudnn8
+docker pull gglyptodon/helixer-docker:helixer_v0.3.3_cuda_11.8.0-cudnn8
 # run container interactively 
-docker run --runtime=nvidia -it gglyptodon/helixer-docker:helixer_v0.3.2_cuda_11.8.0-cudnn8
+docker run --runtime=nvidia -it gglyptodon/helixer-docker:helixer_v0.3.3_cuda_11.8.0-cudnn8
 ```
 ```
 # additionally, set up a shared directory and mount it, e.g.:
@@ -42,7 +42,7 @@ docker run --runtime=nvidia -it gglyptodon/helixer-docker:helixer_v0.3.2_cuda_11
 mkdir -p data/out
 chmod o+w data/out # something the container can write to
 # mount directory and run interactively:
-docker run --runtime=nvidia -it --name helixer_testing_v0.3.2_cuda_11.2.0-cudnn8 --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared gglyptodon/helixer-docker:helixer_v0.3.2_cuda_11.8.0-cudnn8
+docker run --runtime=nvidia -it --name helixer_testing_v0.3.3_cuda_11.2.0-cudnn8 --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared gglyptodon/helixer-docker:helixer_v0.3.3_cuda_11.8.0-cudnn8
 ```
 
 ### Alternatively, build it yourself ###
@@ -55,13 +55,13 @@ wget https://raw.githubusercontent.com/gglyptodon/helixer-docker/main/Dockerfile
 mkdir -p data/out
 chmod o+w data/out # something the container can write to
 
-docker build -t helixer_v0.3.2 --rm .
+docker build -t helixer_v0.3.3 --rm .
 ```
 
 
 - Run:
 ```
-docker run --runtime=nvidia -it --name helixer_v0.3.2 --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared helixer_v0.3.2:latest
+docker run --runtime=nvidia -it --name helixer_v0.3.3 --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared helixer_v0.3.3:latest
 ```
 
 
@@ -141,9 +141,9 @@ singularity --version
 
 ```
 # pull current docker image 
-singularity pull  docker://gglyptodon/helixer-docker:helixer_v0.3.2_cuda_11.8.0-cudnn8
+singularity pull  docker://gglyptodon/helixer-docker:helixer_v0.3.3_cuda_11.8.0-cudnn8
 
 # in this example, the directory "helixer_test" already contains downloaded data
-singularity run --nv helixer-docker_helixer_v0.3.2_cuda_11.8.0-cudnn8.sif Helixer.py --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
+singularity run --nv helixer-docker_helixer_v0.3.3_cuda_11.8.0-cudnn8.sif Helixer.py --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
 # notice '--nv' for GPU support
 ```

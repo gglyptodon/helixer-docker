@@ -3,7 +3,7 @@ name: Docker
 on:
   push:
     # Push to dockerhub on semver tag.
-    tags: [ 'v*.*.*' ]
+    tags: [ 'helixer_v*.*.*' ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:

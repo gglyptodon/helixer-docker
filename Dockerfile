@@ -27,11 +27,9 @@ RUN rm rustup.sh
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # --- Helixer and HelixerPost --- #
-
 WORKDIR /home/helixer_user/
-RUN git clone -b v0.3.2 https://github.com/weberlab-hhu/Helixer.git Helixer
-RUN pip install --no-cache-dir -r /home/helixer_user/Helixer/requirements.txt
-RUN cd Helixer && pip install --no-cache-dir .
+# v0.3.3 
+RUN git clone https://github.com/weberlab-hhu/Helixer.git Helixer && cd Helixer && git checkout tags/v0.3.3 && pip install --no-cache-dir -r /home/helixer_user/Helixer/requirements.3.8.txt && pip install --no-cache-dir .
 
 WORKDIR /home/helixer_user/
 RUN git clone https://github.com/TonyBolger/HelixerPost.git
