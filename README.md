@@ -15,7 +15,7 @@ For more information on how to run Helixer, please refer to its [documentation](
   
 > Note that the code _will_ run on the CPU if an Nvidia GPU or appropriate drivers are not available.
 > However, the walltime requirements will increase _substantially_. If not running on the GPU
-> exclude the parameter `--runtime=nvidia` when running `docker run`, or the parameter `--nv` when
+> exclude the parameter `--gpus all` when running `docker run`, or the parameter `--nv` when
 > running `singularity run`, respectively.
 
 - Prepare, install Docker (https://docs.docker.com/engine/install/ubuntu/) and the
@@ -82,15 +82,16 @@ sudo systemctl restart docker
 ```
 docker pull gglyptodon/helixer-docker:helixer_v0.3.4_cuda_12.2.2-cudnn8
 # run container interactively 
-docker run --runtime=nvidia -it gglyptodon/helixer-docker:helixer_v0.3.4_cuda_12.2.2-cudnn8
+docker run --gpus all -it gglyptodon/helixer-docker:helixer_v0.3.4_cuda_12.2.2-cudnn8
 ```
+(Note: nvidia-docker v2 uses `--runtime=nvidia` instead of `--gpus all`)
 ```
 # additionally, set up a shared directory and mount it, e.g.:
 # on host:
 mkdir -p data/out
 chmod o+w data/out # something the container can write to
 # mount directory and run interactively:
-docker run --runtime=nvidia -it --name helixer_testing_v0.3.4_cuda_12.2.2-cudnn8 --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared gglyptodon/helixer-docker:helixer_v0.3.4_cuda_12.2.2-cudnn8
+docker run --gpus all -it --name helixer_testing_v0.3.4_cuda_12.2.2-cudnn8 --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared gglyptodon/helixer-docker:helixer_v0.3.4_cuda_12.2.2-cudnn8
 ```
 
 ### Alternatively, build it yourself ###
@@ -111,7 +112,6 @@ docker build -t helixer_v0.3.4 --rm .
 ```
 docker run --gpus all -it --name helixer_v0.3.4 --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared helixer_v0.3.4:latest
 ```
-(Note: nvidia-docker v2 uses `--runtime=nvidia` instead of `--gpus all`)
 
 
 ### Try out:
