@@ -11,38 +11,87 @@ For more information on how to run Helixer, please refer to its [documentation](
 ### Instructions for docker (for use with Nvidia GPUs) ###
 
 - Prerequisites (on host):
-  - Nvidia GPU with CUDA capabilities >=3.5; installed driver version >= 450.80.02 
+  - Nvidia GPU with CUDA capabilities >=6.1; installed driver version >=525.60.13 
   
 > Note that the code _will_ run on the CPU if an Nvidia GPU or appropriate drivers are not available.
 > However, the walltime requirements will increase _substantially_. If not running on the GPU
-> exclude the parameter `--runtime=nvidia` when running `docker run`, or the parameter `--nv` when
+> exclude the parameter `--gpus all` when running `docker run`, or the parameter `--nv` when
 > running `singularity run`, respectively.
 
-- Prepare, install nvidia docker runtime (on host), e.g. for ubuntu:
+- Prepare, install Docker (https://docs.docker.com/engine/install/ubuntu/) and the
+Nvidia Container Toolkit (https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
+(on host), e.g. for ubuntu. Please also be aware of Dockers Firewall limitations mentioned on the installation
+instructions website.
 ```
-curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
-distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list |  sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+##################
+# install Docker #
+##################
+
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+# install the latest Docker packages
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# verify Docker installation
+sudo docker run hello-world
+
+####################################
+# install Nvidia Container Toolkit #
+####################################
+
+# configure the production repository
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+  && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+# update the packages list from the repository
 sudo apt update
 
-sudo apt-get install nvidia-docker2
-sudo pkill -SIGHUP dockerd 
+# install the NVIDIA Container Toolkit packages
+sudo apt-get install -y nvidia-container-toolkit
+
+####################
+# configure Docker #
+####################
+
+# configure the container runtime
+sudo nvidia-ctk runtime configure --runtime=docker
+
+# restart the Docker daemon
+sudo systemctl restart docker
+
+# Hint: you can also configure Docker in rootless mode (see the Nvidia Container Toolkit installation instructions website)
 ```
-Or follow instruction from https://github.com/NVIDIA/nvidia-docker
+> **Note**: The Nvidia-Docker wrapper (https://github.com/NVIDIA/nvidia-docker) has been deprecated.
+> It is recommended to switch to the Nvidia Container Toolkit to use Helixer via Docker.
 
 ### Pull prepared image ###
 ```
-docker pull gglyptodon/helixer-docker:helixer_v0.3.3_cuda_11.8.0-cudnn8
+docker pull gglyptodon/helixer-docker:helixer_v0.3.4_cuda_12.2.2-cudnn8
 # run container interactively 
-docker run --runtime=nvidia -it gglyptodon/helixer-docker:helixer_v0.3.3_cuda_11.8.0-cudnn8
+docker run --gpus all -it gglyptodon/helixer-docker:helixer_v0.3.4_cuda_12.2.2-cudnn8
 ```
+(Note: nvidia-docker v2 uses `--runtime=nvidia` instead of `--gpus all`)
 ```
 # additionally, set up a shared directory and mount it, e.g.:
 # on host:
 mkdir -p data/out
 chmod o+w data/out # something the container can write to
 # mount directory and run interactively:
-docker run --runtime=nvidia -it --name helixer_testing_v0.3.3_cuda_11.2.0-cudnn8 --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared gglyptodon/helixer-docker:helixer_v0.3.3_cuda_11.8.0-cudnn8
+docker run --gpus all -it --name helixer_testing_v0.3.4_cuda_12.2.2-cudnn8 --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared gglyptodon/helixer-docker:helixer_v0.3.4_cuda_12.2.2-cudnn8
 ```
 
 ### Alternatively, build it yourself ###
@@ -55,13 +104,13 @@ wget https://raw.githubusercontent.com/gglyptodon/helixer-docker/main/Dockerfile
 mkdir -p data/out
 chmod o+w data/out # something the container can write to
 
-docker build -t helixer_v0.3.3 --rm .
+docker build -t helixer_v0.3.4 --rm .
 ```
 
 
 - Run:
 ```
-docker run --runtime=nvidia -it --name helixer_v0.3.3 --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared helixer_v0.3.3:latest
+docker run --gpus all -it --name helixer_v0.3.4 --rm --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared helixer_v0.3.4:latest
 ```
 
 
@@ -141,9 +190,9 @@ singularity --version
 
 ```
 # pull current docker image 
-singularity pull  docker://gglyptodon/helixer-docker:helixer_v0.3.3_cuda_11.8.0-cudnn8
+singularity pull  docker://gglyptodon/helixer-docker:helixer_v0.3.4_cuda_12.2.2-cudnn8
 
 # in this example, the directory "helixer_test" already contains downloaded data
-singularity run --nv helixer-docker_helixer_v0.3.3_cuda_11.8.0-cudnn8.sif Helixer.py --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
+singularity run --nv helixer-docker_helixer_v0.3.4_cuda_12.2.2-cudnn8.sif Helixer.py --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
 # notice '--nv' for GPU support
 ```
