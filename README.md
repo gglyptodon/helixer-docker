@@ -190,8 +190,14 @@ singularity --version
 
 ```
 # pull current docker image 
-singularity pull  docker://gglyptodon/helixer-docker:helixer_v0.3.4_cuda_12.2.2-cudnn8
-
+singularity pull docker://gglyptodon/helixer-docker:helixer_v0.3.4_cuda_12.2.2-cudnn8
+```
+> **Warning**: If the pulled singularity image claims that 'helixer_post_bin' is not
+> installed, try `sudo singularity pull docker://gglyptodon/helixer-docker:helixer_v0.3.4_cuda_12.2.2-cudnn8`.
+> When pulling the singularity image it's possible that the permissions set in the image get
+> reset, so that 'helixer_post_bin' is not accessible. Pulling the image as superuser retains all
+> permissions correctly.
+```
 # in this example, the directory "helixer_test" already contains downloaded data
 singularity run --nv helixer-docker_helixer_v0.3.4_cuda_12.2.2-cudnn8.sif Helixer.py --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
 # notice '--nv' for GPU support
