@@ -38,10 +38,10 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 
 # --- Helixer and HelixerPost --- #
 WORKDIR /home/helixer_user/
-# v0.3.4
+# v0.3.5
 # upgrading pip fixes bug: pyproject.toml: name, version not recognized (UNKNOWN 0.0.0) when using Ubuntu 22.04 (https://github.com/pypa/setuptools/issues/3269)
 RUN pip install --upgrade pip
-RUN git clone https://github.com/weberlab-hhu/Helixer.git Helixer && cd Helixer && git checkout tags/v0.3.4 && pip install --no-cache-dir -r /home/helixer_user/Helixer/requirements.3.10.txt && pip install --no-cache-dir .
+RUN git clone https://github.com/weberlab-hhu/Helixer.git Helixer && cd Helixer && git checkout tags/v0.3.5 && pip install --no-cache-dir -r /home/helixer_user/Helixer/requirements.3.10.txt && pip install --no-cache-dir .
 
 WORKDIR /home/helixer_user/
 RUN git clone https://github.com/TonyBolger/HelixerPost.git
