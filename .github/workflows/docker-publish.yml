@@ -4,8 +4,6 @@ on:
   push:
     # Push to dockerhub on semver tag.
     tags: [ 'helixer_v*.*.*' ]
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
 
 env:
