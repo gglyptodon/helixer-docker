@@ -82,9 +82,9 @@ sudo systemctl restart docker
 
 ### Use prepared image ###
 ```
-docker pull gglyptodon/helixer-docker:helixer_v0.3.5_cuda_12.2.2-cudnn8
+docker pull gglyptodon/helixer-docker:helixer_v0.3.6_cuda_12.2.2-cudnn8
 # run container interactively 
-docker run --gpus all -it gglyptodon/helixer-docker:helixer_v0.3.5_cuda_12.2.2-cudnn8
+docker run --gpus all -it gglyptodon/helixer-docker:helixer_v0.3.6_cuda_12.2.2-cudnn8
 ```
 (Note: the old nvidia-docker v2 uses `--runtime=nvidia` instead of `--gpus all`)  
 
@@ -97,8 +97,8 @@ Then the files created by Helixer will stay in this folder even after restarting
 mkdir -p data/out
 chmod o+w data/out # something the container can write to
 # mount directory and run interactively:
-docker run --gpus all -it --name helixer_testing_v0.3.5_cuda_12.2.2-cudnn8 --rm \
- --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared gglyptodon/helixer-docker:helixer_v0.3.5_cuda_12.2.2-cudnn8
+docker run --gpus all -it --name helixer_testing_v0.3.6_cuda_12.2.2-cudnn8 --rm \
+ --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared gglyptodon/helixer-docker:helixer_v0.3.6_cuda_12.2.2-cudnn8
 ```
 
 ### Alternatively, build it yourself ###
@@ -111,14 +111,14 @@ wget https://raw.githubusercontent.com/gglyptodon/helixer-docker/main/Dockerfile
 mkdir -p data/out
 chmod o+w data/out # something the container can write to
 
-docker build -t helixer_v0.3.5 --rm .
+docker build -t helixer_v0.3.6 --rm .
 ```
 
 
 - Run:
 ```
-docker run --gpus all -it --name helixer_v0.3.5 --rm \
-  --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared helixer_v0.3.5:latest
+docker run --gpus all -it --name helixer_v0.3.6 --rm \
+  --mount type=bind,source="$(pwd)"/data,target=/home/helixer_user/shared helixer_v0.3.6:latest
 ```
 
 
@@ -224,10 +224,10 @@ Running Helixer via Apptainer was tested for the following versions recently:
 - Apptainer v1.3.6 on Ubuntu 22.04
 ```
 # pull current docker image 
-apptainer pull docker://gglyptodon/helixer-docker:helixer_v0.3.5_cuda_12.2.2-cudnn8
+apptainer pull docker://gglyptodon/helixer-docker:helixer_v0.3.6_cuda_12.2.2-cudnn8
 
 # in this example, the directory "helixer_test" already contains downloaded data
-apptainer run --nv helixer-docker_helixer_v0.3.5_cuda_12.2.2-cudnn8.sif Helixer.py \
+apptainer run --nv helixer-docker_helixer_v0.3.6_cuda_12.2.2-cudnn8.sif Helixer.py \
   --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant \
   --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
 # notice '--nv' for GPU support
@@ -308,16 +308,16 @@ Running Helixer via Singularity was tested for the following versions recently:
 > `Error: helixer_post_bin not found in $PATH, this is required for
 > Helixer.py to complete.`. To circumvent this issue either use this command to
 > pull the image: `sudo singularity pull
-> docker://gglyptodon/helixer-docker:helixer_v0.3.5_cuda_12.2.2-cudnn8`
+> docker://gglyptodon/helixer-docker:helixer_v0.3.6_cuda_12.2.2-cudnn8`
 > or use Apptainer instead as this issue doesn't show up.
 > Known Singularity version with this issue: singularity-ce 4.2.2 on
 > Ubuntu 24.04.
 ```
 # pull current docker image 
-singularity pull docker://gglyptodon/helixer-docker:helixer_v0.3.5_cuda_12.2.2-cudnn8
+singularity pull docker://gglyptodon/helixer-docker:helixer_v0.3.6_cuda_12.2.2-cudnn8
 
 # in this example, the directory "helixer_test" already contains downloaded data
-singularity run --nv helixer-docker_helixer_v0.3.5_cuda_12.2.2-cudnn8.sif Helixer.py \
+singularity run --nv helixer-docker_helixer_v0.3.6_cuda_12.2.2-cudnn8.sif Helixer.py \
   --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant \
   --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
 # notice '--nv' for GPU support
