@@ -226,9 +226,16 @@ Running Helixer via Apptainer was tested for the following versions recently:
 # pull current docker image 
 apptainer pull docker://gglyptodon/helixer-docker:helixer_v0.3.6_cuda_12.2.2-cudnn8
 
-# in this example, the directory "helixer_test" already contains downloaded data
+# fetch models, they will be downloaded into /home/<user>/.local/share
+# unless specified otherwise
+apptainer run helixer-docker_helixer_v0.3.6_cuda_12.2.2-cudnn8.sif fetch_helixer_models.py
+
+# download an example chromosome
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-47/fasta/arabidopsis_lyrata/dna/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz
+
+# test Helixer
 apptainer run --nv helixer-docker_helixer_v0.3.6_cuda_12.2.2-cudnn8.sif Helixer.py \
-  --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant \
+  --fasta-path Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant \
   --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
 # notice '--nv' for GPU support
 ```
@@ -316,9 +323,16 @@ Running Helixer via Singularity was tested for the following versions recently:
 # pull current docker image 
 singularity pull docker://gglyptodon/helixer-docker:helixer_v0.3.6_cuda_12.2.2-cudnn8
 
-# in this example, the directory "helixer_test" already contains downloaded data
+# fetch models, they will be downloaded into /home/<user>/.local/share
+# unless specified otherwise
+singularity run helixer-docker_helixer_v0.3.6_cuda_12.2.2-cudnn8.sif fetch_helixer_models.py
+
+# download an example chromosome
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-47/fasta/arabidopsis_lyrata/dna/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz
+
+# test Helixer
 singularity run --nv helixer-docker_helixer_v0.3.6_cuda_12.2.2-cudnn8.sif Helixer.py \
-  --fasta-path helixer_test/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant \
+  --fasta-path Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant \
   --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
 # notice '--nv' for GPU support
 ```
