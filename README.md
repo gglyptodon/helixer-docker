@@ -250,8 +250,10 @@ apptainer run --nv HelixerApptainer.sif Helixer.py \
   --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
 ```
 
+Alternatively, pull current docker image
+
 ```
-# Alternatively, pull current docker image 
+# pull current docker image 
 apptainer pull docker://gglyptodon/helixer-docker:helixer_v0.3.6_cuda_12.2.2-cudnn8
 
 # fetch models, they will be downloaded into /home/<user>/.local/share
