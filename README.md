@@ -250,7 +250,7 @@ apptainer run --nv HelixerApptainer.sif Helixer.py \
   --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
 ```
 
-Alternatively, pull current docker image
+Alternatively, pull current docker image:
 
 ```
 # pull current docker image 
