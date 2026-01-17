@@ -222,8 +222,36 @@ apptainer --version
 Running Helixer via Apptainer was tested for the following versions recently:
 - Apptainer v1.3.4 on Ubuntu 22.04 and Ubuntu 24.04 (with the extra setup command)
 - Apptainer v1.3.6 on Ubuntu 22.04
+
+If you want to build locally instead of pulling the Docker image, use the
+`Apptainer.def` recipe in this repo:
 ```
-# pull current docker image 
+apptainer build --fakeroot HelixerApptainer.sif Apptainer.def
+```
+Note: `--fakeroot` lets unprivileged users perform build steps that require root
+inside the container; if your system is configured for setuid builds, you can
+omit it.
+To verify the build worked, you can run a quick help command:
+```
+apptainer run --nv HelixerApptainer.sif Helixer.py --help
+```
+Full example using the locally built image and example data:
+```
+# fetch models, they will be downloaded into /home/<user>/.local/share
+# unless specified otherwise
+apptainer run HelixerApptainer.sif fetch_helixer_models.py
+
+# download an example chromosome
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-47/fasta/arabidopsis_lyrata/dna/Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz
+
+# test Helixer
+apptainer run --nv HelixerApptainer.sif Helixer.py \
+  --fasta-path Arabidopsis_lyrata.v.1.0.dna.chromosome.8.fa.gz --lineage land_plant \
+  --gff-output-path Arabidopsis_lyrata_chromosome8_helixer.gff3
+```
+
+```
+# Alternatively, pull current docker image 
 apptainer pull docker://gglyptodon/helixer-docker:helixer_v0.3.6_cuda_12.2.2-cudnn8
 
 # fetch models, they will be downloaded into /home/<user>/.local/share
