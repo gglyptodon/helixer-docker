@@ -49,7 +49,7 @@ RUN cd HelixerPost && git checkout 4d4799bac4c05e574ae628040c5cb58eb4aa18fe
 RUN mkdir bin
 ENV PATH="/home/helixer_user/bin:${PATH}"
 RUN cd HelixerPost/helixer_post_bin && cargo build --release
-RUN mv /home/helixer_user/HelixerPost/target/release/helixer_post_bin /home/helixer_user/bin/
+RUN mv /home/helixer_user/HelixerPost/target/release/helixer_post_bin /usr/local/bin
 RUN rm -r /home/helixer_user/HelixerPost/target/release/
 
 RUN chown -R helixer_user:helixer_user Helixer && \
