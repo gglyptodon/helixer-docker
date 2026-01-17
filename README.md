@@ -6,6 +6,13 @@ This repository accompanies https://github.com/weberlab-hhu/Helixer.
 The aim is to provide a mostly hassle-free way to use Helixer via Docker (or Apptainer/Singularity).
 For more information on how to run Helixer, please refer to its [documentation](https://github.com/weberlab-hhu/Helixer).
 
+## License and notices
+This image is derived from NVIDIA CUDA containers and includes additional software with primary functionality beyond the base
+image. NVIDIA components are licensed under the NVIDIA Deep Learning Container License (see https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license).
+You may use and redistribute this image only in compliance with that license. NVIDIA proprietary components are licensed to run
+only on systems with NVIDIA GPUs. If you distribute a derivative image, you must provide terms at least as protective as NVIDIA's
+license. If you distribute modified NVIDIA source code, include the notice: "This software contains source code provided by NVIDIA Corporation."
+
 ## Table of contents
 1. [Docker](#instructions-for-docker-for-use-with-nvidia-gpus)
 2. [Apptainer/Singularity](#instructions-for--apptainersingularity)
